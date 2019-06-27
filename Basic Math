@@ -1,0 +1,50 @@
+1)
+
+
+class Solution(object):
+    def selfDividingNumbers(self, left, right):
+        toReturn = []
+        for x in range(left, right+1):
+            if self.isSelfDividingNumberStr(str(x)):
+                toReturn.append(x)
+        return toReturn
+            
+
+            
+
+    def isSelfDividingNumberStr(self, numberStr):
+        number = int(numberStr)
+        for digit in numberStr:
+            if (int(digit) == 0) or (number%(int(digit)) != 0):
+                return False
+        
+        return True
+
+
+2)
+
+class Solution(object):
+    def fizzBuzz(self, n):
+        toReturn = []
+        for x in range(1,n+1):
+            if x%3==0 and x%5==0:
+                toReturn.append("FizzBuzz")
+            elif x%3==0:
+                toReturn.append("Fizz")
+            elif x%5==0:
+                toReturn.append("Buzz")
+            else:
+                toReturn.append(str(x))
+        return toReturn
+            
+3)
+
+class Solution(object):
+    def plusOne(self, digits):
+        numberStr = ''.join([str(digit) for digit in digits])
+        numberPlusOne = int(numberStr) + 1 
+        numberPlusOneStr = str(numberPlusOne);
+        toReturn = []
+        for digitStr in numberPlusOneStr:
+            toReturn.append(int(digitStr))
+        return toReturn

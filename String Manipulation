@@ -1,0 +1,65 @@
+1) 
+
+class Solution(object):
+    def reverseString(self, s):
+        for index in range(0,(len(s)/2)):
+            temp = s[index]
+            s[index] = s[len(s) - 1 - index]
+            s[len(s) - 1 - index] = temp
+        return s
+
+2)
+
+class Solution(object):
+    def detectCapitalUse(self, word):
+        isCapitalUsageValid = True
+        if len(word) == 1:
+            return isCapitalUsageValid;
+        allFollowingLettersLowerCase = False
+        allFollowingLettersUpperCase = False
+        for index, letter in enumerate(word):
+            if (index == 0):
+                if letter.isupper():
+                    if word[index+1].isupper():
+                        allFollowingLettersUpperCase = True
+                    if word[index+1].islower():
+                        allFollowingLettersLowerCase = True
+                else:
+                    allFollowingLettersLowerCase = True
+            else:
+                if (allFollowingLettersLowerCase):
+                    if letter.isupper():
+                        isCapitalUsageValid = False
+                        break
+                if (allFollowingLettersUpperCase):
+                    if letter.islower():
+                        isCapitalUsageValid = False
+                        break     
+        return isCapitalUsageValid
+
+3)
+
+class Solution(object):
+    def reverseWords(self, s):
+        words = s.split(' ');
+        for index, word in enumerate(words):
+            words[index] = self.reverseString(list(word))
+        return ' '.join(words)
+        
+    def reverseString(self, s):
+        for index in range(0,(len(s)/2)):
+            temp = s[index]
+            s[index] = s[len(s) - 1 - index]
+            s[len(s) - 1 - index] = temp
+        return ''.join(s)
+
+
+4)
+
+class Solution(object):
+    def isPalindrome(self, s):
+        joinedWord = ''.join(letter for letter in s if letter.isalpha() or letter.isdigit())
+        for index in range(0,len(joinedWord)/2):
+            if (joinedWord[index].lower() != joinedWord[len(joinedWord) - 1 - index].lower()):
+                return False
+        return True

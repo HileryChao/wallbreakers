@@ -1,0 +1,38 @@
+1)
+
+class Solution(object):
+    def sortArrayByParity(self, A):
+        firstOddIndex = self.findNextOdd(0, A)
+        
+        if firstOddIndex != None:
+            for xIndex, x in enumerate(A):
+                if (x%2 == 0) and (xIndex > firstOddIndex):
+                    temp = A[xIndex]
+                    A[xIndex] = A[firstOddIndex]
+                    A[firstOddIndex] = temp
+                    firstOddIndex = self.findNextOdd(firstOddIndex, A)
+                    if firstOddIndex == None:
+                        break;
+        return A
+    
+    def findNextOdd(self, index, A):
+        for itemIndex, item in enumerate(A[index:]):
+            if item%2 != 0:
+                return index + itemIndex
+
+
+
+2)
+
+class Solution(object):
+    def transpose(self, A):
+        toReturn = []
+        cols = len(A)
+        if (cols > 0):
+            rows = len(A[0])
+            toReturn = [[0 for x in range(cols)] for y in range(rows)]
+            for i in range(rows):
+                for j in range(cols):
+                    toReturn[i][j] = A[j][i]
+        return toReturn
+            
