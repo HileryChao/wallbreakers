@@ -63,3 +63,62 @@ class Solution(object):
             if (joinedWord[index].lower() != joinedWord[len(joinedWord) - 1 - index].lower()):
                 return False
         return True
+
+5)
+
+class Solution(object):
+    def reverseVowels(self, s):
+        sArray = list(s)
+        left = self.findNextLeftVowelIndex(sArray, 0)
+        right = self.findNextRightVowelIndex(sArray, len(sArray)-1)
+        while (right > left):
+            temp = sArray[left]
+            sArray[left] = sArray[right]
+            sArray[right] = temp
+            left = left+1
+            right = right-1
+            left = self.findNextLeftVowelIndex(sArray, left)
+            right = self.findNextRightVowelIndex(sArray, right)
+        return ''.join(sArray)
+            
+    def isVowel(self, letter):
+        return (letter.lower() in ('a', 'e', 'i', 'o', 'u'))
+    
+    def findNextLeftVowelIndex(self, letters, leftIndex):
+        addedPosition = 0
+        while((leftIndex < (len(letters)-1)) and (not self.isVowel(letters[leftIndex]))):
+            leftIndex = leftIndex + 1
+        return leftIndex
+    
+    def findNextRightVowelIndex(self, letters, rightIndex):
+        subtractedPosition = 0
+        while((rightIndex >= 0) and (not self.isVowel(letters[rightIndex]))):
+            rightIndex = rightIndex - 1
+        return rightIndex
+
+6)
+
+
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        letterIndex = 0;
+        toReturn = []
+        prefixLetter = self.returnCommonPrefixLetter(strs, letterIndex)
+        while(prefixLetter != ""):
+            toReturn.append(prefixLetter)
+            letterIndex = letterIndex + 1
+            prefixLetter = self.returnCommonPrefixLetter(strs, letterIndex)
+        return ''.join(toReturn)
+         
+    def returnCommonPrefixLetter(self, strs, letterIndex):
+        for index in range(len(strs)-1):
+            if (letterIndex > len(strs[index])-1):
+                return ""
+            if (letterIndex > len(strs[index+1])-1):
+                return ""
+            if strs[index][letterIndex] != strs[index+1][letterIndex]:
+                return ""
+        if ((len(strs) > 0) and (letterIndex < len(strs[0]))):
+            return strs[0][letterIndex]
+        else:
+            return ""
