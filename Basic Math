@@ -48,3 +48,28 @@ class Solution(object):
         for digitStr in numberPlusOneStr:
             toReturn.append(int(digitStr))
         return toReturn
+
+4)
+
+class Solution(object):
+    def titleToNumber(self, s):
+        columnNumber = 0;
+        for letter in s:
+            columnNumber = columnNumber * 26 + self.convertLetterToInt(letter)
+        return columnNumber
+    
+    def convertLetterToInt(self, letter):
+        return ord(letter) - ord('A') + 1
+        
+5)
+
+class Solution(object):
+    def isPowerOfTwo(self, n):
+        if n == 1:
+            return True
+        else:
+            toReturn = 0
+            while(n >= 1.0):
+                toReturn = n
+                n = n/2.0
+        return (toReturn == 1)
