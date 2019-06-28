@@ -1,0 +1,79 @@
+1) 
+
+class Solution(object):
+    def findComplement(self, num):
+        binNum = bin(num)
+        bitPosn = 0
+        complement = 0
+        reversedBinNum = binNum[2:][::-1]
+        for bit in reversedBinNum:
+            if bit == '0':
+                complement = complement + 2**(bitPosn)
+            bitPosn = bitPosn + 1
+        return complement
+
+ 2)
+
+ class Solution(object):
+    def hammingDistance(self, x, y):
+        bin1 = bin(x)[2:]
+        bin2 = bin(y)[2:]
+        if (len(bin1) > len(bin2)):
+            bin2 = self.appendZeros(len(bin1) - len(bin2), bin2)
+        else:
+            bin1 = self.appendZeros(len(bin2) - len(bin1), bin1)
+        
+        hammingDistance = 0
+        for i in range(len(bin1)):
+            if bin1[i] != bin2[i]:
+                hammingDistance += 1
+                
+        return hammingDistance
+        
+        
+    def appendZeros(self, numZeros, string):
+        zeroArray = []
+        for i in range(numZeros):
+            zeroArray.append('0')
+        return ''.join(zeroArray) + string
+
+
+3) 
+
+
+class Solution(object):
+    def binaryGap(self, N):
+        binN = bin(N)[2:]
+        longestConsecutiveDistance = 0;
+        incrementDistance = False
+        currDistance = 0;
+        for bit in binN:
+            if bit == '1':
+                if incrementDistance:
+                    incrementDistance = False
+                else:
+                    incrementDistance = True
+            if incrementDistance:
+                currDistance += 1
+            else:
+                if currDistance > longestConsecutiveDistance:
+                    longestConsecutiveDistance = currDistance
+                if bit == '1':
+                    currDistance = 1
+                    incrementDistance = True
+                else:
+                    currDistance = 0
+        return longestConsecutiveDistance
+
+
+   4)
+
+   class Solution(object):
+    def singleNumber(self, nums):
+        countMap = {}
+        for num in nums:
+            if countMap.get(num) == None:
+                countMap[num] = 0
+            else:
+                del countMap[num]
+        return countMap.keys()[0]
