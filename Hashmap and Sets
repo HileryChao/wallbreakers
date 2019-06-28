@@ -1,0 +1,19 @@
+1) 
+
+class Solution(object):
+    def twoSum(self, nums, target):
+        secondNumMap = {}
+        for index, num in enumerate(nums):
+            firstNum = target - num
+            if secondNumMap.get(num) == None:
+                secondNumMap[firstNum] = index
+            else:
+                return [secondNumMap[num], index]
+
+2)
+
+class Solution(object):
+    def isAnagram(self, s, t):
+        sortedS = ''.join(sorted(s))
+        sortedT = ''.join(sorted(t))
+        return (sortedS == sortedT)
