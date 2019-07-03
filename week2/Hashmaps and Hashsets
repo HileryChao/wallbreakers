@@ -1,0 +1,94 @@
+1)
+
+class Solution(object):
+    def numJewelsInStones(self, J, S):
+        jewelsSet = set()
+        for letter in J:
+            jewelsSet.add(letter)
+            
+        numJewels = 0
+        for letter in S:
+            if letter in jewelsSet:
+                numJewels+=1
+        
+        return numJewels
+
+2)
+
+class Solution(object):
+    def uniqueMorseRepresentations(self, words):
+        transformationSet = set()
+        
+        for word in words:
+            transformation = self.translateMorse(word)
+            transformationSet.add(transformation)
+            
+        return len(transformationSet)
+    
+    
+    def translateMorse(self, word):
+        morseArray = [".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
+        strArray = []
+        
+        for letter in word:
+            letterIndex = ord(letter.lower()) - ord('a')
+            letterMorse = morseArray[letterIndex]
+            strArray.append(letterMorse)
+            
+        return ''.join(strArray)
+
+            
+3)
+
+class Solution(object):
+    def isHappy(self, n):
+        numbers = set()
+        currNumber = n
+        while not ((1 in numbers) or (currNumber in numbers)):
+            newNumber = 0
+            for digitStr in str(currNumber):
+                newNumber += int(digitStr)**2
+            numbers.add(currNumber)
+            currNumber = newNumber
+            
+        return (1 in numbers)
+
+4)
+
+class Solution(object):
+    def uncommonFromSentences(self, A, B):
+        wordsA = A.split(" ")
+        wordsB = B.split(" ")
+        encounteredWords = {}
+
+        for word in wordsA:
+            if encounteredWords.get(word) == None:
+                encounteredWords[word] = 1
+            else:
+                encounteredWords[word] += 1
+        
+        for word in wordsB:
+            if encounteredWords.get(word) == None:
+                encounteredWords[word] = 1
+            else:
+                encounteredWords[word] += 1
+        
+        uncommonWords = []
+        
+        for key,value in encounteredWords.iteritems():
+            if (value == 1):
+                uncommonWords.append(key)
+         
+        return uncommonWords
+
+5)
+
+class Solution(object):
+    def distributeCandies(self, candies):
+        uniqueCandies = set()
+        for candy in candies:
+            uniqueCandies.add(candy)
+        
+        return min(len(uniqueCandies), len(candies)/2)
+     
+        
