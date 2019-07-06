@@ -1,0 +1,246 @@
+1)
+
+class Node(object):
+    def __init__(self, children, isComplete):
+        self.children = children
+        self.isComplete = isComplete
+
+class Trie(object):
+
+    def __init__(self):
+        self.root = Node({}, False)
+        
+    def insert(self, word):
+        currNode = self.root
+        for index, letter in enumerate(word):
+            if (currNode.children.get(letter) == None):
+                newNode = Node({}, False)
+                currNode.children[letter] = newNode
+                currNode = newNode
+            else:
+                currNode = currNode.children.get(letter)
+        currNode.isComplete = True                                 
+
+    def search(self, word):
+        currNode = self.root
+        currLetterIndex = 0
+        while currNode.children and (currLetterIndex < len(word)):            
+            if (currNode.children.get(word[currLetterIndex]) == None):
+                return False
+            else:
+                currNode = currNode.children.get(word[currLetterIndex])
+                currLetterIndex += 1
+            
+        return (currNode.isComplete and currLetterIndex == len(word))
+
+        
+class Solution(object):
+    def longestWord(self, words):
+        trie = Trie()
+        longestWord = ""
+        visitedWords = set()
+        for word in words:
+            trie.insert(word)
+        for word in words:
+            isValid = True
+            for i in range(len(word)):
+                if word[:i+1] not in visitedWords:
+                    if not trie.search(word[:i+1]):
+                        isValid = False
+            if isValid:
+                visitedWords.add(word)
+                if len(word) > len(longestWord):
+                    longestWord = word
+                elif len(word) == len(longestWord):
+                    if word < longestWord:
+                        longestWord = word
+        return longestWord
+        
+
+2)
+
+class Node(object):
+    def __init__(self, children, isComplete):
+        self.children = children
+        self.isComplete = isComplete
+
+class Trie(object):
+
+    def __init__(self):
+        self.root = Node({}, False)
+        
+    def insert(self, word):
+        currNode = self.root
+        for index, letter in enumerate(word):
+            if (currNode.children.get(letter) == None):
+                newNode = Node({}, False)
+                currNode.children[letter] = newNode
+                currNode = newNode
+            else:
+                currNode = currNode.children.get(letter)
+        currNode.isComplete = True                                 
+
+    def search(self, word):
+        currNode = self.root
+        currLetterIndex = 0
+        while currNode.children and (currLetterIndex < len(word)):            
+            if (currNode.children.get(word[currLetterIndex]) == None):
+                return False
+            else:
+                currNode = currNode.children.get(word[currLetterIndex])
+                currLetterIndex += 1
+            
+        return (currNode.isComplete and currLetterIndex == len(word))
+        
+
+    def startsWith(self, prefix):
+        currNode = self.root
+        currLetterIndex = 0
+        while currNode.children and (currLetterIndex < len(prefix)):            
+            if (currNode.children.get(prefix[currLetterIndex]) == None):
+                return False
+            else:
+                currNode = currNode.children.get(prefix[currLetterIndex])
+                currLetterIndex += 1
+            
+        return currLetterIndex == len(prefix)
+
+3)
+
+class Node(object):
+    def __init__(self, children, isComplete):
+        self.children = children
+        self.isComplete = isComplete
+
+class Trie(object):
+
+    def __init__(self):
+        self.root = Node({}, False)
+        
+    def insert(self, word):
+        currNode = self.root
+        for index, letter in enumerate(word):
+            if (currNode.children.get(letter) == None):
+                newNode = Node({}, False)
+                currNode.children[letter] = newNode
+                currNode = newNode
+            else:
+                currNode = currNode.children.get(letter)
+        currNode.isComplete = True                                 
+
+    def search(self, word):
+        currNode = self.root
+        currLetterIndex = 0
+        while currNode.children and (currLetterIndex < len(word)):            
+            if (currNode.children.get(word[currLetterIndex]) == None):
+                return False
+            else:
+                currNode = currNode.children.get(word[currLetterIndex])
+                currLetterIndex += 1
+            
+        return (currNode.isComplete and currLetterIndex == len(word))
+        
+
+    def startsWith(self, prefix):
+        currNode = self.root
+        currLetterIndex = 0
+        while currNode.children and (currLetterIndex < len(prefix)):            
+            if (currNode.children.get(prefix[currLetterIndex]) == None):
+                return False
+            else:
+                currNode = currNode.children.get(prefix[currLetterIndex])
+                currLetterIndex += 1
+            
+        return currLetterIndex == len(prefix)
+    
+class Solution(object):
+    def __init__(self):
+        self.trie = Trie()
+        self.width = 0
+        self.toReturn = set()
+        
+    def findWords(self, board, words):
+        wordsAdded = set()
+        for word in words:
+            self.trie.insert(word)
+        if len(board) == 0:
+            return []
+        rows = len(board)
+        cols = len(board[0])
+        self.width = cols
+      
+        wordArray = []
+        visited = set()
+        for i in range(rows):
+            for j in range(cols):
+                wordArray = []
+                visited = set()
+                self.findWord(board, visited, i, j, i, j, wordArray)
+                if wordArray and self.trie.search(''.join(wordArray)):
+                    self.toReturn.add(''.join(wordArray))
+        return sorted(list(self.toReturn))
+                    
+                
+    def findWord(self, board, visited, startI, startJ, i, j, wordArray):
+        currWord = ''.join(wordArray) + board[i][j]
+        if (not currWord in self.toReturn) and self.trie.startsWith(currWord) and (i * self.width + j) not in visited:
+            wordArray.append(board[i][j])
+            visited.add(i * self.width + j)
+            backtracked = False
+            if self.getTop(board,i,j) and not backtracked:
+                if not self.trie.search(''.join(wordArray)):
+                    self.findWord(board, visited, startI, startJ, i-1, j, wordArray)
+                else:
+                    self.toReturn.add(''.join(wordArray))
+                    #self.findWord(board, visited, startI, startJ, i-1, j, wordArray)
+                    wordArray = []
+                    visited.remove(startI * self.width + startJ)
+                    backtracked = True
+                    self.findWord(board, visited, startI, startJ, startI, startJ, wordArray)
+            if self.getBottom(board,i,j) and not backtracked:
+                if not self.trie.search(''.join(wordArray)):
+                    self.findWord(board, visited, startI, startJ, i+1, j, wordArray)
+                else:
+                    self.toReturn.add(''.join(wordArray))
+                    self.findWord(board, visited, startI, startJ, i+1, j, wordArray)
+                    wordArray = []
+                    visited.remove(startI * self.width + startJ)
+                    backtracked = True
+                    self.findWord(board, visited, startI, startJ, startI, startJ, wordArray)
+            if self.getLeft(board,i,j) and not backtracked: 
+                if not self.trie.search(''.join(wordArray)):
+                    self.findWord(board, visited, startI, startJ, i, j-1, wordArray)
+                else:
+                    self.toReturn.add(''.join(wordArray))
+                    self.findWord(board, visited, startI, startJ, i, j-1, wordArray)
+                    wordArray = []
+                    visited.remove(startI * self.width + startJ)
+                    backtracked = True
+                    self.findWord(board, visited, startI, startJ, startI, startJ, wordArray)
+            if self.getRight(board,i,j) and not backtracked:
+                if not self.trie.search(''.join(wordArray)):
+                    self.findWord(board, visited, startI, startJ, i, j+1, wordArray)
+                else:
+                    self.toReturn.add(''.join(wordArray))
+                    self.findWord(board, visited, startI, startJ, i, j+1, wordArray)
+                    wordArray = []
+                    visited.remove(startI * self.width + startJ)
+                    backtracked = True
+                    self.findWord(board, visited, startI, startJ, startI, startJ, wordArray)
+        else:
+            return
+        
+        
+    def getTop(self, board, i, j):
+        return (i-1 > -1)
+    
+    def getBottom(self, board, i, j):
+        return (i+1 < len(board))
+        
+    def getLeft(self, board, i, j):
+        return (j-1 > -1)
+    
+    def getRight(self, board, i, j):
+        return (j+1 < len(board[0]))
+
+

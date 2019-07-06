@@ -74,3 +74,54 @@ class Solution(object):
             if counterT[t[index]] > counterS[t[index]]:
                 return t[index]
         
+5)
+
+class Solution(object):
+    def mostCommonWord(self, paragraph, banned):
+        bannedSet = set(banned)
+        paragraphArray = re.sub(r'[^a-zA-Z]', ' ', paragraph).split(" ")
+        counter = collections.Counter()
+        for word in paragraphArray:
+            if word.isalnum() and word.lower() not in bannedSet:
+                counter[word.lower()] += 1
+                
+        print counter.most_common()
+        if counter:
+            return counter.most_common()[0][0]
+        else:
+            return ""
+            
+6)
+
+class Solution(object):
+    def frequencySort(self, s):
+        counter = collections.Counter()
+        for letter in s:
+            counter[letter] += 1
+            
+        toReturn = []
+        for item, count in counter.most_common():
+            for i in range(0, counter[item]):
+                toReturn.append(item)
+         
+        return ''.join(toReturn)
+            
+        
+7)
+
+class Solution(object):
+    def findErrorNums(self, nums):
+        counter = collections.Counter()
+        nums = sorted(nums)
+        for i in range(0, len(nums)):
+            counter[nums[i]] += 1
+            if nums[i] != i+1:
+                if counter[i+1] < 1:
+                    counter[i+1] = 0
+    
+        sortedCounter = counter.most_common()
+        print sortedCounter
+        if len(sortedCounter) > 1 and (sortedCounter[len(counter)-1][1] == 0):
+            return [sortedCounter[0][0], sortedCounter[len(counter)-1][0]]
+        else:
+            return []
