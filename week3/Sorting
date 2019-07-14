@@ -1,0 +1,61 @@
+1)
+
+class Solution(object):
+    def isAnagram(self, s, t):
+        sortedS = ''.join(sorted(s))
+        sortedT = ''.join(sorted(t))
+        return (sortedS == sortedT)
+
+2)
+
+class Solution(object):
+    def arrayPairSum(self, nums):
+        sortedNums = sorted(nums)
+        groupSize = 2
+        sum = 0
+        for i in range(0,len(nums),groupSize):
+            numsToCompare = []
+            for j in range(i, i + groupSize):
+                numsToCompare.append(sortedNums[j])
+            sum += min(numsToCompare)
+        return sum
+        
+3)
+
+class Solution(object):
+    def merge(self, intervals):
+        sortedIntervals = sorted(intervals, key=lambda x : x[0])
+        mergedIntervals = []
+
+        for i in range(0, len(sortedIntervals)-1):
+            if self.canMerge(sortedIntervals[i], sortedIntervals[i+1]):
+                sortedIntervals[i+1] = [min(sortedIntervals[i][0],sortedIntervals[i+1][0]), max(sortedIntervals[i][1],sortedIntervals[i+1][1])]
+                sortedIntervals[i] = []
+                
+        for interval in sortedIntervals:
+            if len(interval) == 2:
+                mergedIntervals.append(interval)
+                
+        return mergedIntervals
+                
+            
+    def canMerge(self, interval1, interval2):
+        return interval2[0] <= interval1[1]
+
+4)
+
+class Solution(object):
+    def findAnagrams(self, s, p):
+        sortedP = sorted(p)
+        anagramsIndices = []
+        test = p.split()
+        bisect.insort(test, 'z')
+        sortedSubStr = sorted(s[0:len(p)])
+        for i in range(len(s) - len(p) + 1):
+            if sortedSubStr == sortedP:
+                anagramsIndices.append(i)
+            if (i + len(p) < len(s)):
+                sortedSubStr.remove(s[i])
+                bisect.insort(sortedSubStr, s[i + len(p)])
+                
+        return anagramsIndices

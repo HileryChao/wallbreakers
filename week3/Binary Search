@@ -1,0 +1,36 @@
+1)
+
+class Solution(object):
+    def search(self, nums, target):
+        startIndex = 0
+        endIndex = len(nums)-1
+        while (startIndex <= endIndex):
+            midIndex = startIndex + ((endIndex - startIndex) / 2)
+            if target == nums[midIndex]:
+                return midIndex
+            elif target < nums[midIndex]:
+                endIndex = min(midIndex, endIndex-1)
+            elif target > nums[midIndex]:
+                startIndex = max(midIndex, startIndex+1)
+        return -1
+
+2)
+
+class Solution(object):
+    def peakIndexInMountainArray(self, A):
+        if len(A) == 1:
+            return 0
+        if len(A) == 2:
+            return 1
+        startIndex = 0
+        endIndex = len(A) - 1
+        midIndex = startIndex + ((endIndex - startIndex) / 2)
+        while ((midIndex - 1 >= 0) and (midIndex + 1 < len(A))):
+            if (A[midIndex - 1] < A[midIndex]) and (A[midIndex] > A[midIndex + 1]):
+                return midIndex
+            elif (A[midIndex - 1] < A[midIndex]) and (A[midIndex] < A[midIndex + 1]):
+                startIndex = max(midIndex, startIndex+1)
+            elif (A[midIndex - 1] > A[midIndex]) and (A[midIndex] > A[midIndex + 1]):
+                endIndex = min(midIndex, endIndex-1)
+            midIndex = startIndex + ((endIndex - startIndex) / 2)
+        return -1

@@ -1,0 +1,110 @@
+1)
+
+ class Solution(object):
+    def lemonadeChange(self, bills):
+        numFives = 0
+        numTens = 0
+        for i, bill in enumerate(bills):
+            if (bill == 5):
+                numFives += 1
+            elif (bill == 10):
+                if (numFives > 0):
+                    numFives -= 1
+                    numTens += 1
+                else:
+                    return False
+            elif (bill == 20):
+                if (numFives > 0) and (numTens > 0):
+                    numFives -= 1
+                    numTens -= 1
+                elif (numFives >= 3):
+                    numFives -= 3
+                else:
+                    return False
+        return True
+
+2)
+
+class Solution(object):
+    def findContentChildren(self, g, s):
+        sortedG = sorted(g)
+        sortedS = sorted(s)
+        currChildIndex = 0
+        numContentChildren = 0
+        for cookieSize in sortedS:
+            childGreed = sortedG[currChildIndex]
+            if cookieSize >= childGreed:
+                numContentChildren += 1
+                currChildIndex += 1
+            if currChildIndex > len(sortedG) - 1:
+                break
+        
+        return numContentChildren
+
+3)
+
+class Solution(object):
+    def isSubsequence(self, s, t):
+        if len(s) == 0:
+            return True
+        currSIndex = 0
+        for letter in t:
+            if letter == s[currSIndex]:
+                currSIndex += 1
+            if currSIndex >= len(s): 
+                return True
+        return False
+                
+4)
+
+class Solution(object):
+    def findMinArrowShots(self, points):
+        if len(points) == 0:
+            return 0
+        numArrows = 1
+        sortedPoints = sorted(points, key = lambda x:x[1])
+        currPoint1 = sortedPoints[0]
+        for i in range(len(sortedPoints)-1):
+            point2 = sortedPoints[i+1]
+            if not self.isIntersecting(currPoint1, point2):
+                numArrows += 1
+                currPoint1 = point2
+        return numArrows
+        
+    def isIntersecting(self, point1, point2):
+        return (point1[1] >= point2[0])
+
+5)
+
+class Solution(object):
+    def partitionLabels(self, S):
+        lettersArray = [None] * 26
+        for index, letter in enumerate(S):
+            if lettersArray[self.getCharIndex(letter)] == None:
+                lettersArray[self.getCharIndex(letter)] = [index, index]
+            else:
+                lettersArray[self.getCharIndex(letter)][1] = index
+        partitionSizes = []
+        currLetterIndex = 0
+        partitionStart = currLetterIndex
+        partitionEnd = lettersArray[self.getCharIndex(S[currLetterIndex])][1]
+        while (partitionStart < len(S)):
+            currLetterEnd = lettersArray[self.getCharIndex(S[currLetterIndex])][1]
+            if currLetterEnd > partitionEnd:
+                partitionEnd = currLetterEnd
+            if currLetterIndex == partitionEnd:
+                partitionSizes.append(partitionEnd - partitionStart + 1)
+                partitionStart = (partitionEnd + 1)
+                if partitionStart < len(S):
+                    partitionEnd = lettersArray[self.getCharIndex(S[partitionStart])][1]
+            currLetterIndex += 1
+        return partitionSizes
+    
+    def getCharIndex(self, letter):
+        return ord(letter) - ord('a')
+
+        
+6)
+
+                
+        

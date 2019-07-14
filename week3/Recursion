@@ -1,0 +1,111 @@
+1)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+        
+    def myPow(self, x, n):
+        if n == 0:
+            return 1
+        elif n == 1:
+            return x
+        elif n == -1:
+            return 1/x
+        elif n > 0:
+            myPow = self.map.get(n)
+            if myPow == None:
+                myPow = self.myPow(x, n/2)
+            if n % 2 == 0:
+                return myPow * myPow
+            else:
+                return x * myPow * myPow
+        else:
+            myPow = self.map.get(n)
+            if myPow == None:
+                myPow = self.myPow(1/x, -n/2)
+            if n % 2 == 0:
+                return myPow * myPow
+            else:
+                return 1/x * myPow * myPow  
+
+2)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+        
+    def maxProfit(self, prices):
+        return self.maxProfitHelper(prices, 0, 1, 0)
+        
+    def maxProfitHelper(self, prices, currBuyIndex, currSellIndex, currMax):
+        if (currSellIndex > len(prices) - 1):
+            return currMax
+        else:
+            if prices[currSellIndex] > prices[currBuyIndex]:
+                currMax = max(currMax, prices[currSellIndex] - prices[currBuyIndex])
+            else:
+                currBuyIndex = currSellIndex
+        return self.maxProfitHelper(prices, currBuyIndex, currSellIndex + 1, currMax)
+
+3)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+    
+    def minDistance(self, word1, word2):
+        return self.minDistanceHelper(word1, word2, len(word1), len(word2))
+        
+    def minDistanceHelper(self, word1, word2, word1I, word2I):
+        currCost = 0
+        if word1I == 0:
+            return word2I
+        if word2I == 0:
+            return word1I
+        if word1[word1I - 1] != word2[word2I - 1]:
+            currCost = 1
+            
+        deleteIndices = (word1I - 1, word2I)
+        addIndices = (word1I, word2I - 1)
+        substIndices = (word1I - 1, word2I - 1)
+        
+        if deleteIndices not in self.map:
+            self.map[deleteIndices] = self.minDistanceHelper(word1, word2, word1I - 1, word2I)
+        if addIndices not in self.map:
+            self.map[addIndices] = self.minDistanceHelper(word1, word2, word1I, word2I - 1)
+        if substIndices not in self.map:
+            self.map[substIndices] = self.minDistanceHelper(word1, word2, word1I - 1, word2I - 1)
+        
+        delete = self.map[deleteIndices]
+        add = self.map[addIndices]
+        subst = self.map[substIndices]
+        return min(delete + 1, add + 1, subst + currCost)
+
+4)
+
+class Solution(object):
+    def __init__(self):
+        self.map1 = {}
+        self.map2 = {}
+        
+    def rob(self, nums):
+        if len(nums) == 1:
+            return nums[0]
+        else:
+            return max (self.robHelper(nums, 0, len(nums)-1,self.map1), self.robHelper(nums,1,len(nums),self.map2))
+                           
+    def robHelper(self, nums, currHouse, endHouse, map):
+        if currHouse < endHouse:
+            if currHouse not in map:
+                sum1 = self.robHelper(nums, currHouse + 2, endHouse, map) + nums[currHouse]
+                sum2 = self.robHelper(nums, currHouse + 1, endHouse, map)
+                map[currHouse] = max(sum1, sum2)
+            return map[currHouse]
+        else:
+            return 0
+
+5)
+
+
+               
+        

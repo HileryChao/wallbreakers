@@ -1,0 +1,81 @@
+1) 
+
+class Solution(object):
+    def maxProfit(self, prices):
+        return self.maxProfitHelper(prices, 0, 1, [])
+        
+    def maxProfitHelper(self, prices, currBuyIndex, currSellIndex, dymArr):
+        if len(prices) == 0:
+            return 0
+        if len(prices) == 1:
+            return 0
+        dymArr = [None] * len(prices)
+        dymArr[0] = max(0, prices[currSellIndex] - prices[currBuyIndex])
+        currMin = currBuyIndex
+        for i in range(1, len(prices)):
+            dymArr[i] = max(dymArr[i-1], prices[i] - prices[currMin])
+            if prices[i] < prices[currMin]:
+                currMin = i
+        return dymArr[len(prices) - 1]
+
+2)
+
+class Solution(object):
+    
+    def minDistance(self, word1, word2):
+        return self.minDistanceHelper(word1, word2)
+        
+    def minDistanceHelper(self, word1, word2):
+        dynArray = [0] * (len(word1) + 1)
+        for i in range(len(dynArray)):
+            dynArray[i] = [0] * (len(word2) + 1)
+        
+        if len(word1) == 0:
+            return len(word2)
+        if len(word2) == 0:
+            return len(word1)
+        
+        word1 = " " + word1
+        word2 = " " + word2
+        
+        for i in range(0, len(word1)):
+            dynArray[i][0] = i
+            
+        for j in range(0, len(word2)):
+            dynArray[0][j] = j
+
+        for i in range(1,len(word1)):
+            for j in range(1,len(word2)):
+                currCost = 0
+                if word1[i] != word2[j]:
+                    currCost = 1
+                currDelete = dynArray[i-1][j] + 1
+                currAdd = dynArray[i][j-1] + 1
+                currSubst = dynArray[i-1][j-1] + currCost
+                minDistance = min(currDelete, currAdd, currSubst)
+                dynArray[i][j] = minDistance
+
+        return dynArray[len(word1)-1][len(word2)-1]
+
+3)
+
+class Solution(object):
+        
+    def rob(self, nums):
+        return max(self.robHelper(nums, 0, len(nums) - 1, []), self.robHelper(nums, 1, len(nums), []))
+        
+    def robHelper(self, nums, startHouse, endHouse, dynArray):
+        if len(nums) == 0:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        if len(nums) == 2:
+            return max(nums[0], nums[1])
+        dynArray = [None] * len(nums)
+        dynArray[startHouse] = nums[startHouse]
+        dynArray[startHouse + 1] = max(nums[startHouse + 1], nums[startHouse])
+        for i in range(startHouse + 2, endHouse):
+            dynArray[i] = max(dynArray[i-2] + nums[i], dynArray[i-1])
+
+        return dynArray[endHouse - 1]
+
