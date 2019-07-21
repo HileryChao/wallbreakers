@@ -1,0 +1,20 @@
+1)
+
+import heapq 
+from collections import Counter
+
+class Solution(object):
+    def topKFrequent(self, nums, k):
+        heapq.heapify(nums)
+        counter = Counter()
+        
+        while nums:
+            popped = heapq.heappop(nums)
+            counter[popped] += 1
+        
+        kMostFrequent = []
+        
+        for i in range(k):
+            kMostFrequent.append(counter.most_common()[i][0])
+            
+        return kMostFrequent

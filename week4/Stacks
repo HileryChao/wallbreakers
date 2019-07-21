@@ -1,0 +1,110 @@
+1)
+
+class Solution(object):
+    def calPoints(self, ops):
+        lastValidRounds = []
+        sum = 0
+        for item in ops:
+            if item == "+":
+                if len(lastValidRounds) >= 2:
+                    lastValid = lastValidRounds.pop()
+                    secondLastValid = lastValidRounds[-1]
+                    currValid = lastValid + secondLastValid
+                    sum += currValid
+                    lastValidRounds.append(lastValid)
+                    lastValidRounds.append(currValid)
+            elif item == "D":
+                if len(lastValidRounds) >= 1:
+                    lastValid = lastValidRounds[-1]
+                    currValid = lastValid * 2
+                    sum += currValid
+                    lastValidRounds.append(currValid)
+            elif item == "C":
+                lastValid = lastValidRounds.pop()
+                sum -= lastValid
+            elif item.lstrip("-").isdigit():
+                lastValidRounds.append(int(item))
+                sum += int(item)
+        return sum
+
+2)
+
+class Solution(object):
+    def nextGreaterElement(self, nums1, nums2):
+        nextGreaterNumbers = []
+        numToNextGreaterMap = {}
+        stack = []
+        
+        for i in range(len(nums2)):
+            currItem = nums2[i]
+            
+            while len(stack) > 0 and currItem > stack[-1]:
+                popped = stack.pop()
+                numToNextGreaterMap[popped] = currItem
+            
+            stack.append(currItem)
+            
+        for item in nums1:
+            if item in numToNextGreaterMap:
+                nextGreaterNumbers.append(numToNextGreaterMap[item])
+            else:
+                nextGreaterNumbers.append(-1)
+            
+        return nextGreaterNumbers
+
+3)
+
+class Solution(object):
+    def isValid(self, s):
+        bracketStack = []
+        for item in list(s):
+            if item == "(" or item == "[" or item == "{":
+                bracketStack.append(item)
+            elif item == ")":
+                if len(bracketStack) > 0:
+                    bracket = bracketStack.pop()
+                    if bracket != "(":
+                        return False
+                else:
+                    return False
+            elif item == "]":
+                if len(bracketStack) > 0:
+                    bracket = bracketStack.pop()
+                    if bracket != "[":
+                        return False
+                else:
+                    return False
+            elif item == "}":
+                if len(bracketStack) > 0:
+                    bracket = bracketStack.pop()
+                    if bracket != "{":
+                        return False
+                else:
+                    return False
+        return (len(bracketStack) == 0)
+            
+                
+4)
+
+class Solution(object):
+    def scoreOfParentheses(self, S):
+        stack = []
+        for item in list(S):
+            if item == "(":
+                stack.append("(")
+            elif item == ")":
+                popped = stack.pop()
+                if popped == "(":
+                    stack.append("1")
+                else:
+                    sum = 0
+                    while popped != "(":
+                        sum += int(popped)
+                        popped = stack.pop()
+                    sum = sum * 2
+                    stack.append(str(sum))
+        finalSum = 0
+        while len(stack) > 0:
+            finalSum += int(stack.pop())
+            
+        return finalSum

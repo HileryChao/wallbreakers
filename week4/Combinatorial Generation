@@ -1,0 +1,91 @@
+1)
+
+class Solution(object):
+    def subsets(self, nums):
+        return self.subsetsHelper(nums)
+    
+    def subsetsHelper(self, nums):
+        if nums:
+            subsets = self.subsetsHelper(nums[:-1])
+            toReturn = list(subsets)
+            for subset in subsets:
+                toAdd = list(subset)
+                toAdd.append(nums[-1])
+                toReturn.append(toAdd)
+            return toReturn
+        else:
+            return [[]]
+            
+2)
+
+class Solution(object):
+    def permute(self, nums):
+        return self.permuteHelper(nums)
+        
+    def permuteHelper(self, nums):
+        if nums:
+            subsets = self.permuteHelper(nums[:-1])
+            toReturn = []
+            for subset in subsets:
+                for i in range(len(nums)):
+                    toReturn.append(subset[:i] + [nums[-1]] + subset[i:])
+            return toReturn
+        else:
+            return [[]]
+        
+3)
+
+class Solution(object):
+    def combine(self, n, k):
+        array = []
+        for i in range(1, n+1):
+            array.append(i)
+            
+        return self.combineHelper(array,k)
+    
+    def combineHelper(self, nums, k):
+        if k > 0:
+            if len(nums) == k:
+                return [nums]
+            else:
+                toReturn = []
+                nextCombos = self.combineHelper(nums[:-1], k - 1)
+                for combo in nextCombos:
+                    toAdd = list(combo)
+                    toAdd.append(nums[-1])
+                    toReturn.append(toAdd)
+                toReturn = toReturn + self.combineHelper(nums[:-1], k)
+                return toReturn
+        else:
+            return [[]]
+
+4)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+    
+    def generateParenthesis(self, n):
+        return self.generateParenthesisHelper(n)
+        
+    def generateParenthesisHelper(self, n):
+        if n == 0:
+            return [""]
+        else:
+            toReturn = []
+            for i in range(n):
+                
+                if i not in self.map:
+                    self.map[i] = self.generateParenthesisHelper(i)
+
+                if n - i - 1 not in self.map:
+                    self.map[n - i - 1] = self.generateParenthesisHelper(n - i - 1)
+
+                subParent1 = self.map[i]
+                subParent2 = self.map[n - i - 1]
+            
+                for x in subParent1:
+                    for y in subParent2:
+                        toAdd = '(' + x + ')' + y
+                        toReturn.append(toAdd)
+            return toReturn

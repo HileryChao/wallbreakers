@@ -1,0 +1,98 @@
+1) 
+
+class Solution(object):
+    def reverseList(self, head):
+        prev = None
+        currNode = head
+        while currNode != None:
+            oldNext = currNode.next
+            currNode.next = prev
+            prev = currNode
+            currNode = oldNext
+            
+        return prev
+
+2)
+
+class Solution(object):
+    def oddEvenList(self, head):
+        currEven = None
+        currEvenIterate = None
+        iterateNode = head
+        currOdd = head
+        counter = 1
+        
+        if head is None:
+            return None
+        
+        while (iterateNode != None):
+            if counter % 2 == 0:
+                if currEven is None:
+                    currEven = ListNode(iterateNode.val)
+                    currEvenIterate = currEven
+                else:
+                    currEvenIterate.next = iterateNode 
+                    currEvenIterate = iterateNode
+            else:
+                if counter is not 1:
+                    currOdd.next = iterateNode
+                    currOdd = iterateNode
+            iterateNode = iterateNode.next
+            counter += 1
+            
+        if currEvenIterate is not None and currEvenIterate.next is not None:
+            if counter % 2 == 0:
+                currEvenIterate.next = None
+
+        currOdd.next = currEven
+            
+        return head
+
+3)
+
+class Solution(object):
+    def reverseKGroup(self, head, k):
+        currStart = head
+        iterateNode = head
+        toReturn = None
+        toReturnIterate = None
+        counter = 1
+        
+        if k > 1:
+            while iterateNode is not None:
+                oldNext = iterateNode.next
+                if counter % k == 0 and counter is not 1:
+                    reverseGroup = self.reverseGroup(currStart, oldNext)
+                    if toReturn is None:
+                        toReturn = reverseGroup
+                        toReturnIterate = reverseGroup
+                        toReturnIterate = self.findEnd(toReturnIterate)
+                    else:
+                        toReturnIterate.next = reverseGroup
+                        toReturnIterate = self.findEnd(toReturnIterate)
+                    currStart = oldNext
+                iterateNode = oldNext
+                counter += 1
+        
+        if toReturnIterate is not None:
+            toReturnIterate.next = currStart
+        else:
+            toReturn = head
+        return toReturn
+
+    def reverseGroup(self, start, finish):
+        prev = None
+        currNode = start
+        while currNode is not finish and currNode is not None:
+            oldNext = currNode.next
+            currNode.next = prev
+            prev = currNode
+            currNode = oldNext
+        
+        start = prev 
+        return start
+    
+    def findEnd(self, node):
+        while node.next is not None:
+            node = node.next
+        return node
