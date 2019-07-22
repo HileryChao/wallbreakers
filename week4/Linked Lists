@@ -96,3 +96,135 @@ class Solution(object):
         while node.next is not None:
             node = node.next
         return node
+
+4)
+
+class LRUCache(object):
+
+    def __init__(self, capacity):
+        self.cache = DoublyLinkedList()
+        self.map = {}
+        self.capacity = capacity
+        
+
+    def get(self, key):
+        if self.map.get(key):
+            removed = self.cache.remove(ListNode(key))
+            self.cache.insertFirst(removed)
+            return self.map[key]
+        else:
+            return -1
+
+    def put(self, key, value):
+        if self.cache.size == self.capacity:
+            if key in self.map:
+                removed = self.cache.remove(ListNode(key))
+            else:
+                removed = self.cache.removeLast()
+                del self.map[removed.val]
+            self.cache.insertFirst(ListNode(key))
+            self.map[key] = value
+        else:
+            if key in self.map:
+                self.cache.remove(ListNode(key))
+            self.cache.insertFirst(ListNode(key))
+            self.map[key] = value
+
+        """
+        :type key: int
+        :type value: int
+        :rtype: None
+        """
+        
+
+
+# Your LRUCache object will be instantiated and called as such:
+# obj = LRUCache(capacity)
+# param_1 = obj.get(key)
+# obj.put(key,value)
+
+class ListNode(object):
+    def __init__(self, val):
+        self.val = val
+        self.prev = None
+        self.next = None
+        
+class DoublyLinkedList(object):
+    def __init__(self):
+        self.head = None
+        self.last = None
+        self.valToNodeMap = {}
+        self.size = 0
+        
+    def insertFirst(self, node):
+        if self.head == None:
+            self.head = node
+            self.last = node
+            self.valToNodeMap[node.val] = node
+        else:
+            self.head.prev = node
+            node.next = self.head
+            self.valToNodeMap[self.head.val] = self.head
+            self.head = node
+            self.valToNodeMap[node.val] = node
+        self.size += 1
+            
+    def insertLast(self, node):
+        if self.head == None:
+            self.head = node
+            self.last = node
+            self.valToNodeMap[node.val] = node
+        else:
+            node.prev = self.last
+            self.last.next = node
+            self.valToNodeMap[self.last.val] = self.last
+            self.last = node
+            self.valToNodeMap[node.val] = node
+        self.size += 1
+        
+            
+    def remove(self, node):
+        if self.valToNodeMap.get(node.val):
+            if self.valToNodeMap[node.val] == self.head:
+                return self.removeFirst()
+            elif self.valToNodeMap[node.val] == self.last:
+                return self.removeLast()
+            else:
+                toRemove = self.valToNodeMap[node.val]
+                prev = toRemove.prev
+                next = toRemove.next
+                prev.next = next
+                next.prev = prev
+                del self.valToNodeMap[node.val]
+                self.size -= 1
+                return toRemove
+        else:
+            return None
+            
+        
+    def removeFirst(self):
+        if self.head:
+            toRemove = self.head
+            next = self.head.next
+            self.head = next
+            if next:
+                next.prev = None  
+            del self.valToNodeMap[toRemove.val]
+            self.size -= 1
+            return toRemove
+        else:
+            return None
+    
+    
+    def removeLast(self):
+        if self.last:
+            toRemove = self.last
+            prev = self.last.prev
+            self.last = prev
+            if prev:
+                self.last.next = None
+            del self.valToNodeMap[toRemove.val]
+            self.size -= 1
+            return toRemove
+        else:
+            return None

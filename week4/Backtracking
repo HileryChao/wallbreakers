@@ -1,0 +1,64 @@
+1) 
+
+class Solution(object):
+    def combinationSum(self, candidates, target):
+        return self.combinationSumHelper(sorted(candidates), target, [])
+        
+    def combinationSumHelper(self, candidates, target, currentCombos):
+        toReturn = []
+        for i in range(len(candidates)):
+            if candidates[i] == target:
+                toReturn.append(currentCombos + [candidates[i]])
+            elif candidates[i] < target:
+                combos = self.combinationSumHelper(candidates[i:], target - candidates[i], currentCombos + [candidates[i]])
+                for combo in combos:
+                    toReturn.append(combo)
+        
+        return toReturn
+
+
+2)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+    
+    def canPartition(self, nums):
+        if sum(nums)%2 == 0:
+            return self.canPartitionHelper(nums, sum(nums)/2)
+        else:
+            return False
+    
+    def canPartitionHelper(self, nums, target):
+        if target == 0:
+            return True
+        elif target > 0:
+            for i in range(len(nums)):
+                if (i+1,target - nums[i]) not in self.map:
+                    self.map[(i+1,target - nums[i])] = self.canPartitionHelper(nums[i+1:], target - nums[i])
+                
+                if self.map[(i+1,target - nums[i])]:
+                    return True
+        return False
+
+3)
+
+class Solution(object):
+    def __init__(self):
+        self.map = {}
+    
+    def canPartitionKSubsets(self, nums, k):
+        if sum(nums)%k == 0:
+            return self.canPartitionKSubsetsHelper(nums, sum(nums)/k, k)
+        else:
+            return False
+    
+    def canPartitionKSubsetsHelper(self, nums, target, numSubsets):
+        print numSubsets
+        if target == 0 and numSubsets == 1:
+            return True
+        elif target > 0:
+            for i in range(len(nums)):
+                if self.canPartitionKSubsetsHelper(nums[i+1:], target - nums[i], numSubsets - 1):
+                    return True
+        return False

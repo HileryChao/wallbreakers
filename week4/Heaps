@@ -18,3 +18,27 @@ class Solution(object):
             kMostFrequent.append(counter.most_common()[i][0])
             
         return kMostFrequent
+
+2)
+
+import heapq
+class Solution(object):
+    def mergeKLists(self, lists):
+        minheap = []
+        for list in lists:
+            currNode = list
+            while currNode is not None:
+                heapq.heappush(minheap,currNode.val)
+                currNode = currNode.next 
+        
+        toReturn = None
+        toReturnIterate = None
+        while minheap:
+            poppedNode = ListNode(heapq.heappop(minheap))
+            if not toReturn:
+                toReturn = poppedNode
+                toReturnIterate = poppedNode
+            else:
+                toReturnIterate.next = poppedNode
+                toReturnIterate = toReturnIterate.next 
+        return toReturn
