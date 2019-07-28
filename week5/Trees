@@ -1,0 +1,145 @@
+1)
+
+class Solution(object):
+    def postorder(self, root):
+        return self.postorderHelper(root, [])
+
+    
+    def postorderHelper(self, root, nodes):
+        if root is None:
+            return nodes
+        for child in root.children:
+            self.postorderHelper(child, nodes)
+        nodes.append(str(root.val))
+        return nodes
+
+2)
+
+class Solution(object):
+    def leafSimilar(self, root1, root2):
+        leaves1 = []
+        leaves2 = []
+        self.getTreeLeaves(root1, leaves1)
+        self.getTreeLeaves(root2, leaves2)
+        return (leaves1 == leaves2)
+        
+        
+    def getTreeLeaves(self, root, leaves):
+        if root is None:
+            return
+        if root.left is None and root.right is None:
+            leaves.append(str(root.val))
+        self.getTreeLeaves(root.left, leaves)
+        self.getTreeLeaves(root.right, leaves)
+
+3)
+
+class Solution(object):
+    def isSameTree(self, p, q):
+        leavesP = []
+        leavesQ = []
+        self.genInOrderTraversalList(p, leavesP)
+        self.genInOrderTraversalList(q, leavesQ)
+        print leavesP
+        print leavesQ
+        return leavesP == leavesQ
+        
+    def genInOrderTraversalList(self, root, leaves):
+        if root == None:
+            return
+        if root.left == None and root.right != None:
+            leaves.append(str(None))
+            leaves.append(root.val)
+            self.genInOrderTraversalList(root.right, leaves)
+            return
+        if root.right == None and root.left != None:
+            self.genInOrderTraversalList(root.left, leaves)
+            leaves.append(root.val)
+            leaves.append(str(None))
+            return
+        self.genInOrderTraversalList(root.left, leaves)
+        leaves.append(root.val)
+        self.genInOrderTraversalList(root.right, leaves)
+
+4)
+
+class Solution(object):
+    def sumOfLeftLeaves(self, root):
+        leaves = []
+        self.sumOfLeftLeavesHelper(root, False, leaves)
+        return sum(leaves)
+        
+    def sumOfLeftLeavesHelper(self, root, isLeft, leaves):
+        if root == None:
+            return
+        if root.left == None and root.right ==None:
+            if isLeft:
+                leaves.append(root.val)
+        self.sumOfLeftLeavesHelper(root.left, True, leaves)
+        self.sumOfLeftLeavesHelper(root.right, False, leaves)
+
+5)
+
+class Solution(object):
+    def __init__(self):
+        self.max = 0
+        
+    def diameterOfBinaryTree(self, root):
+        if root == None:
+            return 0
+        sum = self.diameterOfBinaryTreeHelper(root)
+        return self.max
+        
+    def diameterOfBinaryTreeHelper(self, root):
+        if root == None:
+            return 0
+        depthLeft = self.diameterOfBinaryTreeHelper(root.left)
+        depthRight = self.diameterOfBinaryTreeHelper(root.right)
+        self.max = max(depthLeft + depthRight, self.max)
+        return max(depthLeft, depthRight)+1
+
+6)
+
+class Solution(object):
+    def __init__(self):
+        self.max = 0
+    
+    def longestUnivaluePath(self, root):
+        self.longestUnivaluePathHelper(root)
+        return self.max
+        
+    def longestUnivaluePathHelper(self, root):
+        if root == None:
+            return 0
+        left = self.longestUnivaluePathHelper(root.left)
+        right = self.longestUnivaluePathHelper(root.right)
+        leftPath = 0
+        rightPath = 0
+        if root.left and root.left.val == root.val:
+            leftPath = left + 1
+        if root.right and root.right.val == root.val:
+            rightPath = right + 1
+        self.max =  max(self.max, leftPath + rightPath)
+        return max(leftPath, rightPath)
+
+7)
+
+from collections import deque
+
+class Solution(object):
+    def findBottomLeftValue(self, root):
+        return self.returnLeavesAtLevel(root, self.maxHeight(root))[0]
+        
+    def returnLeavesAtLevel(self, root, level):
+        if root == None:
+            return []
+        if level == 1:
+            return [root.val]
+        return self.returnLeavesAtLevel(root.left, level - 1) + self.returnLeavesAtLevel(root.right, level - 1)
+    
+    def maxHeight(self, root):
+        if root == None:
+            return 0
+        heightLeft = 1 + self.maxHeight(root.left)
+        heightRight = 1 + self.maxHeight(root.right)
+        return max(heightLeft, heightRight)

@@ -1,0 +1,267 @@
+1)
+
+class Solution(object):
+    
+    def canFinish(self, numCourses, prerequisites):
+        graph = self.determineNeighbors(numCourses, prerequisites)
+        cycleDetected = self.detectCycle(graph, numCourses)
+        return not cycleDetected
+        
+        
+    def detectCycle(self, graph, numCourses):
+        visited = [False] * numCourses
+        recursionStack = [False] * numCourses
+        for i in range(numCourses):
+            if not visited[i]:
+                if self.detectCycleHelper(i, visited, recursionStack, graph):
+                    return True
+        return False
+        
+        
+    def detectCycleHelper(self, vertex, visited, recursionStack, graph):
+        visited[vertex] = True
+        recursionStack[vertex] = True
+        for neighbor in graph[vertex]:
+            if not visited[neighbor]:
+                if self.detectCycleHelper(neighbor, visited, recursionStack, graph):
+                    return True
+            elif recursionStack[neighbor]:
+                return True
+        recursionStack[vertex] = False
+        return False
+        
+                
+        
+    def determineNeighbors(self, numCourses, prerequisites):
+        nodes = [None] * numCourses
+        for i in range(len(prerequisites)):
+            vertex = prerequisites[i][0]
+            neighbor = prerequisites[i][1]
+            if nodes[vertex] == None:
+                nodes[vertex] = [neighbor]
+            else:
+                nodes[vertex].append(neighbor)
+        for i in range(len(nodes)):
+            if nodes[i] == None:
+                nodes[i] = []
+        return nodes
+
+2)
+
+class Solution(object):
+    def __init__(self):
+        self.perimeter = 0
+    
+    def islandPerimeter(self, grid):
+        if len(grid) == 0:
+            return 0
+        rows = len(grid)
+        cols = len(grid[0])
+        for i in range(rows):
+            for j in range(cols):
+                    visited = [False] * rows
+                    for k in range(len(visited)):
+                        visited[k] = [False] * cols
+                    self.dfs(i,j,rows,cols,grid,visited)
+                    if self.perimeter > 0:
+                        return self.perimeter
+        return self.perimeter
+        
+        
+        
+    def dfs(self, i, j, rows, cols, grid, visited):
+        if self.outOfBounds(i,j,rows,cols):
+            return
+        elif visited[i][j] == False:
+            visited[i][j] = True
+            if grid[i][j] == 0:
+                return
+            else:
+                self.perimeter += 4
+                self.dfs(i - 1, j, rows, cols, grid, visited)
+                self.dfs(i, j + 1, rows, cols, grid, visited)
+                self.dfs(i, j - 1, rows, cols, grid, visited)
+                self.dfs(i + 1, j, rows, cols, grid, visited)
+            if grid[i][j] == 1:  
+                if not self.outOfBounds(i-1,j,rows,cols) and grid[i-1][j] == 1:
+                    self.perimeter -= 1
+                if not self.outOfBounds(i,j+1,rows,cols) and grid[i][j+1] == 1:
+                    self.perimeter -= 1
+                if not self.outOfBounds(i,j-1,rows,cols) and grid[i][j-1] == 1:
+                    self.perimeter -= 1
+                if not self.outOfBounds(i+1,j,rows,cols) and grid[i+1][j] == 1:
+                    self.perimeter -= 1
+        
+    def outOfBounds(self, i, j, rows, cols):
+        return ((i > rows - 1) or (j > cols - 1) or (i < 0) or (j < 0))
+
+3)
+
+from collections import deque
+
+class Solution(object):
+    def __init__(self):
+        self.partitionsGraph = []
+    
+    def isBipartite(self, graph):
+        for i in range(len(graph)):
+            self.partitionsGraph.append(-1)
+        
+        for i in range(len(graph)):
+            if self.partitionsGraph[i] == -1:
+                if not self.determineBipartiteOneVertex(graph, i):
+                    return False
+                
+        return True
+         
+    def determineBipartiteOneVertex(self, graph, source):
+        vertices = deque()
+        vertices.append(source)
+        
+        while vertices:
+            currSource = vertices.popleft()
+            currSourceNeighbors = graph[currSource]
+            for neighbor in currSourceNeighbors:
+                if self.partitionsGraph[neighbor] == -1:
+                    self.partitionsGraph[neighbor] = 1 - self.partitionsGraph[currSource]
+                    vertices.append(neighbor)
+                elif self.partitionsGraph[neighbor] == self.partitionsGraph[currSource]:
+                    return False
+        
+        return True
+
+
+4)
+
+class Solution(object):
+    def exist(self, board, word):
+        if len(board) == 0:
+            return false
+        rows = len(board)
+        cols = len(board[0])
+        visited = [False] * rows
+        for k in range(len(visited)):
+            visited[k] = [False] * cols
+        for i in range(rows):
+            for j in range(cols):
+                if self.searchWord(board, word, 0, visited, i, j, rows, cols):
+                    return True
+        return False
+        
+    def searchWord(self, board, word, wordIndex, visited, i, j, rows, cols):
+        if (wordIndex+1 > len(word)):
+            return False
+        if not self.outOfBounds(i,j,rows,cols):
+            if visited[i][j] == False:
+                if board[i][j] != word[wordIndex]:
+                    return False
+                if board[i][j] == word[wordIndex] and ((wordIndex+1) == len(word)):
+                    return True
+                visited[i][j] = True
+                bottom = self.searchWord(board, word, wordIndex+1, visited, i + 1, j, rows, cols)
+                top = self.searchWord(board, word, wordIndex+1, visited, i - 1, j, rows, cols)
+                right = self.searchWord(board, word, wordIndex+1, visited, i, j + 1, rows, cols)
+                left = self.searchWord(board, word, wordIndex+1, visited, i, j - 1, rows, cols)
+                if bottom or top or right or left:
+                    return True
+                visited[i][j] = False
+            else:
+                return False
+        else:
+            return False
+            
+    def outOfBounds(self, i,j,rows,cols):
+        return (i > rows-1) or (j > cols-1) or (i < 0) or (j < 0)
+
+5)
+
+from collections import deque
+
+class Solution(object):
+    def __init__(self):
+        self.coursesNoMorePrereq = deque()
+        self.graph = []
+    
+    def findOrder(self, numCourses, prerequisites):
+        self.createGraph(prerequisites, numCourses)
+        prereqsCount = self.countPrereqs(prerequisites, numCourses)
+        self.findAllCoursesWithoutPrereqs(prerequisites, numCourses, prereqsCount)
+        # print prereqsCount
+        # print self.graph
+        # print self.coursesNoMorePrereq
+        orderOfCourses = []
+        numPrereqsSatisfied = 0
+        
+        while self.coursesNoMorePrereq:
+            currCourse = self.coursesNoMorePrereq.popleft()
+            orderOfCourses.append(currCourse)
+            for outgoingCourse in self.graph[currCourse]:
+                prereqsCount[outgoingCourse] -= 1
+                if (prereqsCount[outgoingCourse]) == 0:
+                    numPrereqsSatisfied += 1
+                    self.coursesNoMorePrereq.append(outgoingCourse)
+                
+        if len(orderOfCourses) != numCourses:
+            return []
+        else:
+            return orderOfCourses
+                          
+    #count "incoming" edges for each course
+    def countPrereqs(self, prerequisites, numCourses):
+        prereqsCount = [0] * numCourses
+        for i in range(len(prerequisites)):
+            prereqsCount[prerequisites[i][0]] += 1
+        return prereqsCount
+            
+        
+    def findAllCoursesWithoutPrereqs(self, prerequisites, numCourses, prereqsCount):
+        for i in range(len(prereqsCount)):
+            if prereqsCount[i] == 0:
+                self.coursesNoMorePrereq.append(i)
+                
+    def createGraph(self, prerequisites, numCourses):
+        self.graph = [None] * numCourses
+        for i in range(len(self.graph)):
+            self.graph[i] = []
+        for i in range(len(prerequisites)):
+            self.graph[prerequisites[i][1]].append(prerequisites[i][0])
+
+6)
+
+class Solution(object):
+    def __init__(self):
+        self.memo = {}
+    
+    def longestIncreasingPath(self, matrix):
+        if len(matrix) == 0:
+            return 0
+        rows = len(matrix)
+        cols = len(matrix[0])
+        currMaxPathLen = 0
+        for i in range(rows):
+            for j in range(cols):
+                pathSum = self.determineIncreasingPathSum(matrix, i, j, rows, cols, 0)
+                if pathSum > currMaxPathLen:
+                    currMaxPathLen = pathSum
+        return currMaxPathLen
+        
+    def determineIncreasingPathSum(self, matrix, i, j, rows, cols, pathLen):
+        if not self.outOfBounds(i,j,rows,cols):
+            if (i,j) not in self.memo:
+                top = bottom = right = left = 0
+                if not self.outOfBounds(i-1,j,rows,cols) and matrix[i-1][j] > matrix[i][j]:
+                    top = self.determineIncreasingPathSum(matrix,i-1,j,rows,cols,pathLen+1)
+                if not self.outOfBounds(i+1,j,rows,cols) and matrix[i+1][j] > matrix[i][j]:
+                    bottom = self.determineIncreasingPathSum(matrix,i+1,j,rows,cols,pathLen+1)
+                if not self.outOfBounds(i,j+1,rows,cols) and matrix[i][j+1] > matrix[i][j]:
+                    right = self.determineIncreasingPathSum(matrix,i,j+1,rows,cols,pathLen+1)
+                if not self.outOfBounds(i,j-1,rows,cols) and matrix[i][j-1] > matrix[i][j]:
+                    left = self.determineIncreasingPathSum(matrix,i,j-1,rows,cols,pathLen+1)
+                self.memo[(i,j)] = 1 + max(top,bottom,right,left)
+            return self.memo[(i,j)]
+        else:
+            return 0
+    
+    def outOfBounds(self, i, j, rows, cols):
+        return ((i < 0) or (j < 0) or (i > rows - 1) or (j > cols - 1))
+        
