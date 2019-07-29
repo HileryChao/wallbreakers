@@ -264,4 +264,71 @@ class Solution(object):
     
     def outOfBounds(self, i, j, rows, cols):
         return ((i < 0) or (j < 0) or (i > rows - 1) or (j > cols - 1))
+
+7)
+
+from collections import deque
+
+class Solution(object):
+    def __init__(self):
+        self.graph = []
+    
+    def networkDelayTime(self, times, N, K):
+        self.graph = self.createGraph(times,N)
+        nodeDistances = self.findShortestPathsAllNodes(N, K)
+        maxTime = max(nodeDistances)
+        print nodeDistances
+        if maxTime == float("inf"):
+            return -1
+        else:
+            return maxTime
+        
+    def findShortestPathsAllNodes(self, numNodes, src):
+        nodeDistances = [float("inf")] * numNodes
+        nodeDistances[src-1] = 0
+        nodesDistancesDetermined = set()
+        
+        while len(nodesDistancesDetermined) < numNodes:
+            currNode = self.findNodeWithMinDistanceAndNotDetermined(nodesDistancesDetermined, nodeDistances)
+            if currNode == -1:
+                break
+                
+            nodesDistancesDetermined.add(currNode)
+            neighbors = self.graph[currNode]
+            
+            for neighbor in neighbors:
+                distSource = nodeDistances[currNode]
+                currDistNeighbor = nodeDistances[neighbor[0]-1]
+                storedDistNeighbor = neighbor[1]
+                if distSource + storedDistNeighbor < currDistNeighbor:
+                    nodeDistances[neighbor[0]-1] = distSource + storedDistNeighbor
+        
+        return nodeDistances
+            
+        
+    def findNodeWithMinDistanceAndNotDetermined(self, nodesDistancesDetermined, nodeDistances):
+        node = -1
+        minDistance = float("inf")
+        for i in range(len(nodeDistances)):
+            if nodeDistances[i] < minDistance:
+                if i not in nodesDistancesDetermined:
+                    minDistance = nodeDistances[i]
+                    node = i
+        return node
+        
+        
+    def createGraph(self, times, numNodes):
+        graph = [None] * numNodes
+        
+        for i in range(numNodes):
+            graph[i] = []
+            
+        for i in range(len(times)):
+            source = times[i][0]
+            destination = times[i][1]
+            distance = times[i][2]
+            graph[source-1].append([destination,distance])
+        
+        return graph
+
         
